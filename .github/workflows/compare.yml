@@ -1,3 +1,6 @@
+on:
+  push:
+    branches: [ stage ]
 stages:
   - compare
   - merge
@@ -11,7 +14,7 @@ compare:
 merge:
   stage: merge
   script:
-    - git merge <stage_to_merge>
+    - git merge stage
   when: on_success
   only:
     - merge_requests
