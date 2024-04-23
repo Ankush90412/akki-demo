@@ -1,0 +1,17 @@
+stages:
+  - compare [ DEV ]
+  - merge
+
+compare:
+  stage: compare
+  script:
+    - git fetch origin $CI_MERGE_REQUEST_TARGET_DEV:$CI_MERGE_REQUEST_TARGET_DEV
+    - git diff --exit-code $CI_MERGE_REQUEST_TARGET_DEV..$CI_COMMIT_REF_NAME || { echo "Code differs between branches, merge blocked"; exit 1; }
+
+merge:
+  stage: merge
+  script:
+    - # Your merge script or command here
+  when: on_success
+  only:
+    - merge_requests
