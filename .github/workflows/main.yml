@@ -1,0 +1,17 @@
+name: Run Bash Script
+
+on:
+  push:
+    branches:
+      - stage  # Adjust the branch name as needed
+
+jobs:
+  run-bash-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run Bash script
+        run: script.sh
