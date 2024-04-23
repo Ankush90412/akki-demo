@@ -14,4 +14,4 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Run Bash script
-        run: .github/script.sh
+        run: bash .github/script.sh
