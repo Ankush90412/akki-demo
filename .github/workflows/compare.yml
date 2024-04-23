@@ -1,24 +1,12 @@
-on:
-  push:
-    branches: [ stage ]
 stages:
-  - compare
-  - merge
-jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-compare:
-  stage: compare
-  script:
-    - git fetch origin $CI_MERGE_REQUEST_TARGET_DEV:$CI_MERGE_REQUEST_TARGET_DEV
-    - git diff --exit-code $CI_MERGE_REQUEST_TARGET_DEV..$CI_COMMIT_REF_NAME || { echo "Code differs between branches, merge blocked"; exit 1; }
- 
-merge:
-  stage: merge
-  script:
-    - git merge stage
-  when: on_success
-  only:
-    - merge_requests
+  - check_code
+ 
+check_code:
+  stage: check_code
+  script:
+    - git fetch origin
+    - git checkout $CI_COMMIT_REF_NAME
+    - git checkout $CI_DEFAULT_BRANCH
+    - git diff --exit-code $CI_COMMIT_REF_NAME $CI_DEFAULT_BRANCH || { echo "Code in PR does not match with code in development branch."; exit 1; }
+  only:
+    - merge_requests
