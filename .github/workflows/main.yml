@@ -15,3 +15,6 @@ jobs:
 
       - name: Run Bash script
         run: bash .github/script.sh
+      - name: Fail the workflow if differences are found
+        if: ${{ failure() }}
+        run: exit 1        
