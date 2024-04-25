@@ -1,17 +1,28 @@
-name: Run Bash Script
+name: Block Pull Request if Lower Branch Doesn't Have Same Code
 
 on:
-  push:
+  pull_request:
     branches:
-      - stage  # Adjust the branch name as needed
+      - stage
 
 jobs:
-  run-bash-script:
+  check_code:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.base.sha }} # Checkout lower branch
 
-      - name: Run Bash script
-        run: bash .github/script.sh
+      - name: Check for code differences
+        run: |
+          git diff --exit-code HEAD..${{ github.event.pull_request.head.sha }}
+          if [ $? -ne 0 ]; then
+            echo "Code in pull request differs from lower branch. Blocking merge."
+            exit 1
+          else
+            echo "Code in pull request matches lower branch. Proceeding with merge."
+          fi
+
+      # Add additional steps as needed, such as notifications or further checks
